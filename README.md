@@ -1,6 +1,7 @@
 # Installation
 
 - redux
+- axios
 
 # Database
 
