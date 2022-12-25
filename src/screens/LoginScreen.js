@@ -6,7 +6,7 @@ import Loading from "../Loading";
 import "./LoginScreen.css";
 import SignupScreen from "./SignupScreen";
 const LoginScreen = () => {
-  const [signIn, setSignIn] = useState(false);
+  const [signIn, setSignIn] = useState(true);
   const [user, loading] = useAuthState(auth);
   if (loading) return <Loading />;
   if (user) return <Navigate to="/" replace />;

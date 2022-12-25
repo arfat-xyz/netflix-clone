@@ -6,9 +6,9 @@ import { auth } from "./firebase";
 import RequireAuth from "./RequireAuth";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 function App() {
   const [user, loading, error] = useIdToken(auth);
-  console.log(user);
   return (
     <div className="app">
       <BrowserRouter>
@@ -18,6 +18,14 @@ function App() {
             element={
               <RequireAuth>
                 <HomeScreen />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfileScreen />
               </RequireAuth>
             }
           />

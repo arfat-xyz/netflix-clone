@@ -13,14 +13,13 @@ import Loading from "../Loading";
 
 const SignupScreen = () => {
   const [user, setUser] = useState(null);
-
+  const [signUpValue, setSignUpValue] = useState(false);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const [createUserWithEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
   const [signInWithEmailAndPassword, signInUser, loading] =
     useSignInWithEmailAndPassword(auth);
-  const [updateProfile, updating, error] = useUpdateProfile(auth);
   const register = async (e) => {
     e.preventDefault();
     // console.log(auth);
@@ -38,36 +37,61 @@ const SignupScreen = () => {
       emailRef.current.value,
       passwordRef.current.value
     )
-      .then((authUser) => setUser(authUser))
+      .then((authUser) => {
+        setUser(authUser);
+        console.log(authUser);
+      })
       .catch((e) => alert(e.message));
   };
-  if (loading || updating) return <Loading />;
+  console.log(user);
+  if (loading) return <Loading />;
   if (user) return <Navigate to="/" replace />;
   return (
     <div className="signupScreen">
-      <form action="">
-        <h1>Sign In</h1>
+      <form onSubmit={signUpValue ? register : signIn}>
+        <h1>{signUpValue ? "Sign Up" : "Sign In"}</h1>
+
         <input
           ref={emailRef}
           type="email"
-          name=""
+          name="email"
           placeholder="Email"
           required
         />
         <input
           ref={passwordRef}
           type="password"
-          name=""
+          name="password"
           placeholder="Password"
           required
         />
-        <button type="submit" onClick={signIn}>
-          Sign In
-        </button>
-        <h4>
-          <span>New to Netflix?</span>{" "}
-          <span onClick={register}>Sign Up now.</span>
-        </h4>
+
+        {signUpValue ? (
+          <button
+            type="submit"
+            // onSubmit={register}
+          >
+            Register
+          </button>
+        ) : (
+          <button
+            type="submit"
+            //  onSubmit={signIn}
+          >
+            Sign In
+          </button>
+        )}
+        {signUpValue ? (
+          <h4>
+            <span>Already registered? </span>{" "}
+            <span onClick={() => setSignUpValue(false)}>Login</span>
+          </h4>
+        ) : (
+          <h4>
+            <span>New to Netflix?</span>{" "}
+            <span onClick={() => setSignUpValue(true)}>Sign Up now.</span>
+          </h4>
+        )}
       </form>
     </div>
   );
