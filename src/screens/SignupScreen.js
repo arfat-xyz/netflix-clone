@@ -1,35 +1,48 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./SignupScreen.css";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 // const auth = getAuth();
 import { auth } from "../firebase";
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+  useSignInWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
+import { Navigate } from "react-router-dom";
+import Loading from "../Loading";
+
 const SignupScreen = () => {
+  const [user, setUser] = useState(null);
+
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const register = (e) => {
+  const [createUserWithEmailAndPassword] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, signInUser, loading] =
+    useSignInWithEmailAndPassword(auth);
+  const [updateProfile, updating, error] = useUpdateProfile(auth);
+  const register = async (e) => {
     e.preventDefault();
-    console.log(auth);
+    // console.log(auth);
+
     createUserWithEmailAndPassword(
-      auth,
       emailRef.current.value,
       passwordRef.current.value
     )
-      .then((authUser) => console.log(authUser))
+      .then((authUser) => setUser(authUser))
       .catch((e) => alert(e.message));
   };
   const signIn = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(
-      auth,
       emailRef.current.value,
       passwordRef.current.value
     )
-      .then((authUser) => console.log(authUser))
+      .then((authUser) => setUser(authUser))
       .catch((e) => alert(e.message));
   };
+  if (loading || updating) return <Loading />;
+  if (user) return <Navigate to="/" replace />;
   return (
     <div className="signupScreen">
       <form action="">

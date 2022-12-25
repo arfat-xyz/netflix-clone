@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Banner from "../Banner";
 import "./HomeScreen.css";
 import Nav from "../Nav";
 import requests from "../Requests";
 import Row from "../Row";
+import { auth } from "../firebase";
+import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
+import Loading from "../Loading";
 const HomeScreen = () => {
+  const [updateProfile, updating] = useUpdateProfile(auth);
+  const [user] = useAuthState(auth);
+  useEffect(() => {
+    const updatingProfile = async () => {
+      const x = await updateProfile({
+        displayName: "User",
+        photoURL: "https://i.ibb.co/cCTnszB/arfat-xyz-min.jpg",
+      });
+      console.log(x);
+    };
+    !user?.displayName && updatingProfile();
+  }, [user, updateProfile]);
+  console.log();
+  if (updating) return <Loading />;
   return (
     <div className="homeScreen">
       {/* Nav  */}
