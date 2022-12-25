@@ -2,6 +2,7 @@
 
 - redux
 - axios
+- react-router
 
 # Database
 
